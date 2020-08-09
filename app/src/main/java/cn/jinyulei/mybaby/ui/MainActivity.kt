@@ -1,19 +1,18 @@
 package cn.jinyulei.mybaby.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import cn.jinyulei.mybaby.R
 import cn.jinyulei.mybaby.data.BabyService
 import cn.jinyulei.mybaby.data.RegisterInfo
+import cn.jinyulei.mybaby.databinding.ActivityMainBinding
+import cn.jinyulei.mybaby.ui.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 
@@ -26,11 +25,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         Log.v("MainActivity", service.toString())
-        tv_go.setOnClickListener {
-            startActivity(Intent(this, SecondActivity::class.java))
-        }
+        val biding: ActivityMainBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_main)
+        biding.viewModel = MainViewModel()
+        biding.lifecycleOwner = this
         GlobalScope.launch(Dispatchers.Main) {
             try {
                 service.createUser(RegisterInfo("18768143316", "1234", "123456"))
